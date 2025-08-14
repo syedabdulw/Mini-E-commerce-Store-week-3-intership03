@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Mini E-commerce</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">TechStore</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link" onclick="showView('home')">Home</a>
+                <a href="#" class="nav-link" onclick="showView('cart')">
+                    <i class="fas fa-shopping-cart cart-icon">
+                        <span class="cart-count" id="cartCount">0</span>
+                    </i>
+                </a>
+                <a href="#" class="nav-link" onclick="showView('admin')">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Home View -->
+        <div id="homeView" class="view active">
+            <h1>Featured Products</h1>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Cart View -->
+        <div id="cartView" class="view">
+            <h1>Shopping Cart</h1>
+            <div id="cartContent">
+                <!-- Cart items will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Checkout View -->
+        <div id="checkoutView" class="view">
+            <h1>Checkout</h1>
+            <form class="checkout-form" id="checkoutForm" onsubmit="processCheckout(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-input" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-input" name="lastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-input" name="address" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-input" name="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ZIP Code</label>
+                        <input type="text" class="form-input" name="zip" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Card Number</label>
+                    <input type="text" class="form-input" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="text" class="form-input" name="expiry" placeholder="MM/YY" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CVV</label>
+                        <input type="text" class="form-input" name="cvv" placeholder="123" required>
+                    </div>
+                </div>
+                <button type="submit" class="checkout-btn">Place Order</button>
+            </form>
+        </div>
+
+        <!-- Confirmation View -->
+        <div id="confirmationView" class="view">
+            <div class="confirmation-card">
+                <i class="fas fa-check-circle confirmation-icon"></i>
+                <h2 class="confirmation-title">Order Confirmed!</h2>
+                <p>Thank you for your purchase. Your order has been successfully placed.</p>
+                <div class="order-details" id="orderDetails">
+                    <!-- Order details will be displayed here -->
+                </div>
+                <button class="btn btn-primary" onclick="showView('home')">Continue Shopping</button>
+            </div>
+        </div>
+
+        <!-- Admin View -->
+        <div id="adminView" class="view">
+            <div class="admin-header">
+                <h1>Product Management</h1>
+                <button class="btn btn-primary" onclick="openProductModal()">
+                    <i class="fas fa-plus"></i>
+                    Add Product
+                </button>
+            </div>
+            <div class="admin-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminProductsTable">
+                        <!-- Admin products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Product</h2>
+                <button class="modal-close" onclick="closeProductModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="productForm" onsubmit="saveProduct(event)">
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" class="form-input" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price ($)</label>
+                    <input type="number" class="form-input" name="price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" name="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stock Quantity</label>
+                    <input type="number" class="form-input" name="stock" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Image URL (optional)</label>
+                    <input type="text" class="form-input" name="image" placeholder="https://example.com/image.jpg">
+                </div>
+                <button type="submit" class="btn btn-primary">Save Product</button>
+            </form>
+        </div>
+    </div>
+ <script src="script.js"></script> 
+</body>
+</html>
